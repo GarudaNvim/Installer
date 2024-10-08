@@ -6,9 +6,29 @@
 echo
 echo
 echo "Welcome to GarudaNvim!"
-echo "This installer is designed for macOS."
+echo "This installer supports Operating Systems like MacOS, Arch, Fedora, CentOS, RHEL, Ubuntu and Debian"
+echo "And all their distributions!"
 echo
 echo "=================================================================================================================="
+echo
+
+# Step 0: Check if the system is Unix-based and ~/.config/ directory exists
+echo "Step 0: Verifying Unix-based system and checking for ~/.config/ directory"
+echo "------------------------------------------------------------------------------------------------------------------"
+# Check if the system is Unix-based
+if [ "$(uname)" != "Darwin" ] && [ "$(uname)" != "Linux" ]; then
+  echo "ERROR: This installer only supports macOS or Linux-based operating systems. Check above."
+  echo "Aborting installation."
+  exit 1
+fi
+
+# Ensure the ~/.config/ directory exists
+if [ ! -d ~/.config ]; then
+  echo "INFO: ~/.config/ directory not found. Creating it..."
+  mkdir -p ~/.config
+fi
+echo "INFO: System check passed! Continuing with installation."
+echo
 echo
 
 # Step 1: Check for existing Neovim configuration
@@ -65,14 +85,10 @@ echo
 echo "=================================================================================================================="
 echo
 
-# Success message
+# Success message and opening GarudaNvim
 echo "SUCCESS: GarudaNvim has been correctly installed!"
+echo "Type \"nvim\" in your terminal to start GarudaNvim"
 echo "Happy Coding!"
 echo
-echo "=================================================================================================================="
 echo
 
-# Opening GarudaNvim
-echo "PRESS ENTER TO OPEN IT"
-read -r
-nvim
