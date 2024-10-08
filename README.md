@@ -1,4 +1,4 @@
-# GarudaNvim Installer
+# Installer
 
 Welcome to the **GarudaNvim Installer** repository! This repository contains scripts to easily install and uninstall **GarudaNvim**, a powerful and efficient Neovim configuration, tailored for macOS.
 
@@ -30,7 +30,8 @@ To install GarudaNvim on your macOS system, simply follow these steps:
    ```sh
    LATEST=$(curl -s https://api.github.com/repos/GarudaNvim/Installer/releases/latest | grep '"tag_name"' | cut -d '"' -f 4)
    wget -q https://raw.githubusercontent.com/GarudaNvim/Installer/$LATEST/installGarudaNvim.sh
-   chmod +x installGarudaNvim.sh && ./installGarudaNvim.sh && rm installGarudaNvim.sh
+   chmod +x installGarudaNvim.sh && { ./installGarudaNvim.sh } || { echo }
+   rm -f installGarudaNvim.sh
    ```
 
 2. Follow the on-screen prompts:

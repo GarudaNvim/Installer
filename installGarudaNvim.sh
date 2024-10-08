@@ -12,27 +12,100 @@ echo
 echo "=================================================================================================================="
 echo
 
-# Step 0: Check if the system is Unix-based and ~/.config/ directory exists
-echo "Step 0: Verifying Unix-based system and checking for ~/.config/ directory"
+# Step 0: Detect OS
+echo "Step 0: Detecting Operating System"
 echo "------------------------------------------------------------------------------------------------------------------"
-# Check if the system is Unix-based
-if [ "$(uname)" != "Darwin" ] && [ "$(uname)" != "Linux" ]; then
-  echo "ERROR: This installer only supports macOS or Linux-based operating systems. Check above."
-  echo "Aborting installation."
-  exit 1
+OS=""
+if [ "$(uname)" = "Darwin" ]; then
+  OS="macOS"
+elif [ -f /etc/os-release ]; then
+  . /etc/os-release
+  case "$ID" in
+    ubuntu|debian)
+      OS="Ubuntu"
+      ;;
+    arch)
+      OS="Arch"
+      ;;
+    fedora)
+      OS="Fedora"
+      ;;
+    centos|rhel)
+      OS="RHEL"
+      ;;
+    *)
+      OS="Unsupported"
+      ;;
+  esac
+else
+  OS="Unsupported"
 fi
 
+if [ "$OS" = "Unsupported" ]; then
+  echo "ERROR: Your operating system is not supported by this installer."
+  echo "Supported OS: macOS, Arch, Ubuntu, Debian, Fedora, CentOS, RHEL. And their distributions."
+  echo
+  echo
+  exit 1
+fi
+echo "INFO: Detected OS - $OS"
 # Ensure the ~/.config/ directory exists
 if [ ! -d ~/.config ]; then
   echo "INFO: ~/.config/ directory not found. Creating it..."
   mkdir -p ~/.config
 fi
-echo "INFO: System check passed! Continuing with installation."
+echo "INFO: System checks passed! Continuing with installation."
 echo
 echo
 
-# Step 1: Check for existing Neovim configuration
-echo "Step 1: Checking for existing Neovim configuration in ~/.config/nvim"
+# Step 1: Check if Neovim is installed
+echo "Step 1: Checking if Neovim is already installed"
+echo "------------------------------------------------------------------------------------------------------------------"
+if command -v nvim >/dev/null 2>&1; then
+  echo "INFO: Neovim is already installed on your system!"
+else
+  echo "INFO: Neovim is not installed. Installing Neovim for $OS..."
+  
+  case "$OS" in
+    macOS)
+      if ! command -v brew >/dev/null 2>&1; then
+        echo "ERROR: Homebrew is not installed. Please install Homebrew to proceed."
+        echo "Visit https://brew.sh/ for instructions."
+        echo
+        echo
+        exit 1
+      fi
+      brew install neovim
+      ;;
+    Ubuntu)
+      sudo apt update
+      sudo apt install -y neovim
+      ;;
+    Arch)
+      sudo pacman -Sy neovim
+      ;;
+    Fedora)
+      sudo dnf install -y neovim
+      ;;
+    RHEL)
+      sudo yum install -y neovim
+      ;;
+  esac
+
+  if command -v nvim >/dev/null 2>&1; then
+    echo "INFO: Neovim has been successfully installed!"
+  else
+    echo "ERROR: Failed to install Neovim. Please try installing it manually."
+    echo
+    echo
+    exit 1
+  fi
+fi
+echo
+echo
+
+# Step 2: Check for existing Neovim configuration
+echo "Step 2: Checking for existing Neovim configuration in ~/.config/nvim"
 echo "------------------------------------------------------------------------------------------------------------------"
 if [ -d ~/.config/nvim ]; then
   echo "WARNING: The directory ~/.config/nvim already exists."
@@ -65,7 +138,9 @@ if [ -d ~/.config/nvim ]; then
       mv ~/.cache/nvim{,.bak}
       echo "INFO: Backup complete!"
     else
+      echo
       echo "INFO: Please manually backup your configuration and try installing GarudaNvim again."
+      echo
       echo
       exit 1
     fi
@@ -76,8 +151,8 @@ fi
 echo
 echo
 
-# Step 2: Cloning GarudaNvim repository
-echo "Step 2: Installing GarudaNvim to ~/.config/nvim"
+# Step 3: Cloning GarudaNvim repository
+echo "Step 3: Installing GarudaNvim to ~/.config/nvim"
 echo "------------------------------------------------------------------------------------------------------------------"
 # Clone the repository
 git clone https://github.com/garudanvim/GarudaNvim.git ~/.config/nvim
