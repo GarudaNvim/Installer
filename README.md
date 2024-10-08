@@ -28,8 +28,8 @@ To install GarudaNvim on your macOS system, simply follow these steps:
 
 1. Run the following command in your terminal for the latest release of Installer:
    ```sh
-   X=$(curl -s https://api.github.com/repos/GarudaNvim/Installer/releases/latest | grep '"tag_name"' | cut -d '"' -f 4)
-   wget -q https://raw.githubusercontent.com/GarudaNvim/Installer/$X/installGarudaNvim.sh
+   LATEST=$(curl -s https://api.github.com/repos/GarudaNvim/Installer/releases/latest | grep '"tag_name"' | cut -d '"' -f 4)
+   wget -q https://raw.githubusercontent.com/GarudaNvim/Installer/$LATEST/installGarudaNvim.sh
    chmod +x installGarudaNvim.sh && ./installGarudaNvim.sh && rm installGarudaNvim.sh
    ```
 

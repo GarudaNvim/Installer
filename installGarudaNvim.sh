@@ -71,7 +71,7 @@ if [ -d ~/.config/nvim ]; then
     fi
   fi
 else
-  echo "INFO: No existing Neovim configuration found."
+  echo "INFO: No existing Neovim configuration found. Continuing with installation."
 fi
 echo
 echo
@@ -79,11 +79,19 @@ echo
 # Step 2: Cloning GarudaNvim repository
 echo "Step 2: Installing GarudaNvim to ~/.config/nvim"
 echo "------------------------------------------------------------------------------------------------------------------"
+# Clone the repository
 git clone https://github.com/garudanvim/GarudaNvim.git ~/.config/nvim
 cd ~/.config/nvim || exit 1
+echo "Cloned the Repository."
+# Fetch the latest release tag
+latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
+# Reset to the commit of the latest release
+git reset --hard "$latest_tag"
+echo "Set GarudaNvim to the latest release"
 echo
 echo "=================================================================================================================="
 echo
+
 
 # Success message and opening GarudaNvim
 echo "SUCCESS: GarudaNvim has been correctly installed!"
