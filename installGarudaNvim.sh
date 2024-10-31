@@ -6,14 +6,16 @@
 echo
 echo
 echo "Welcome to GarudaNvim!"
-echo "This installer supports Operating Systems like MacOS, Arch, Fedora, CentOS, RHEL, Ubuntu and Debian"
+echo ""
+echo "The installer supports Operating Systems like:"
+echo "MacOS, Arch, Fedora, CentOS, RHEL, Ubuntu and Debian"
 echo "And all their distributions!"
 echo
 echo "=================================================================================================================="
 echo
 
 # Step 0: Detect OS
-echo "Step 0: Detecting Operating System"
+echo "Step 1: Detecting Operating System"
 echo "------------------------------------------------------------------------------------------------------------------"
 OS=""
 if [ "$(uname)" = "Darwin" ]; then
@@ -59,7 +61,7 @@ echo
 echo
 
 # Step 1: Check if Neovim is installed
-echo "Step 1: Checking if Neovim is already installed"
+echo "Step 2: Checking if Neovim is already installed"
 echo "------------------------------------------------------------------------------------------------------------------"
 if command -v nvim >/dev/null 2>&1; then
   echo "INFO: Neovim is already installed on your system!"
@@ -93,6 +95,7 @@ else
   esac
 
   if command -v nvim >/dev/null 2>&1; then
+    echo
     echo "INFO: Neovim has been successfully installed!"
   else
     echo "ERROR: Failed to install Neovim. Please try installing it manually."
@@ -105,7 +108,7 @@ echo
 echo
 
 # Step 1.5: Checking for System Dependencies
-echo "Step 1.5: Checking for System Dependencies"
+echo "Step 3: Checking for GarudaNvim Dependencies"
 echo "------------------------------------------------------------------------------------------------------------------"
 echo "Checking for the following dependencies on your system:"
 echo "Node, Python, Ripgrep, Lazygit, Htop"
@@ -130,6 +133,7 @@ else
     echo "INFO: Found installed dependencies: ${installed_dependencies[*]}"
     echo "INFO: Missing dependencies: ${missing_dependencies[*]}"
     for dep in "${missing_dependencies[@]}"; do
+        echo
         read -p "Would you like to install $dep? (y/n): " install_choice
         if [ "$install_choice" = "y" ]; then
             case "$OS" in
@@ -171,6 +175,7 @@ else
                     ;;
             esac
             if command -v "$dep" >/dev/null 2>&1; then
+                echo
                 echo "INFO: $dep has been successfully installed!"
             else
                 echo "WARNING: Failed to install $dep. Please install it manually if you want GarudaNvim to function smoothly."
@@ -185,7 +190,7 @@ echo
 
 
 # Step 2: Check for existing Neovim configuration
-echo "Step 2: Checking for existing Neovim configuration in ~/.config/nvim"
+echo "Step 4: Checking for existing Neovim configuration in ~/.config/nvim"
 echo "------------------------------------------------------------------------------------------------------------------"
 if [ -d ~/.config/nvim ]; then
   echo "WARNING: The directory ~/.config/nvim already exists."
@@ -204,7 +209,7 @@ if [ -d ~/.config/nvim ]; then
     echo "INFO: Existing configuration deleted."
   else
     echo
-    echo "Step 1.5: Backup Options"
+    echo "Step 4.5: Backup Options"
     echo "------------------------------------------------------------------------------------------------------------------"
     echo "You can either automatically backup your current Neovim configuration or manually do it."
     read -p "Would you like to automatically backup and proceed with the installation? (y/n): " backup_choice
@@ -232,7 +237,7 @@ echo
 echo
 
 # Step 3: Cloning GarudaNvim repository
-echo "Step 3: Installing GarudaNvim to ~/.config/nvim"
+echo "Step 5: Installing GarudaNvim to ~/.config/nvim"
 echo "------------------------------------------------------------------------------------------------------------------"
 # Clone the repository
 git clone https://github.com/garudanvim/GarudaNvim.git ~/.config/nvim
@@ -249,9 +254,16 @@ echo
 
 
 # Success message and opening GarudaNvim
-echo "SUCCESS: GarudaNvim has been correctly installed!"
+echo "SUCCESS: Hurray! GarudaNvim has been correctly installed!"
 echo "Type \"nvim\" in your terminal to start GarudaNvim"
-echo "Happy Coding!"
+echo
+echo "NOTE: The first time you open GarudaNvim, it may take an additional 5-10 seconds to load."
+echo "During this time, GarudaNvim is setting up and downloading essential plugins for your environment."
+echo "Once the setup is complete, press 'q' to exit the lazy installation mode."
+echo
+echo "After exiting, please reopen GarudaNvim to start using it."
+echo "You’ll then be ready to enjoy GarudaNvim at full capacity with all configurations and plugins installed"
+echo
+echo "Happy Coding with GarudaNvim! 💻"
 echo
 echo
-

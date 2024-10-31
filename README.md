@@ -116,4 +116,4 @@ If you wish to uninstall GarudaNvim and remove all related configuration, follow
 
 If you encountered any issues while using **GarudaNvim**, or if you have suggestions for improvements, please raise an issue on the [Installer's Issue Page](https://github.com/GarudaNvim/Installer/issues)
 
-Thank you for using GarudaNvim!
+Happy Coding with **GarudaNvim!** 💻
