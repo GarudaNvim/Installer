@@ -14,7 +14,7 @@ echo
 echo "=================================================================================================================="
 echo
 
-# Step 0: Detect OS
+# Step 1: Detect OS
 echo "Step 1: Detecting Operating System"
 echo "------------------------------------------------------------------------------------------------------------------"
 OS=""
@@ -60,7 +60,7 @@ echo "INFO: System checks passed! Continuing with installation."
 echo
 echo
 
-# Step 1: Check if Neovim is installed
+# Step 2: Check if Neovim is installed
 echo "Step 2: Checking if Neovim is already installed"
 echo "------------------------------------------------------------------------------------------------------------------"
 if command -v nvim >/dev/null 2>&1; then
@@ -107,12 +107,12 @@ fi
 echo
 echo
 
-# Step 1.5: Checking for System Dependencies
+# Step 3: Checking for System Dependencies
 echo "Step 3: Checking for GarudaNvim Dependencies"
 echo "------------------------------------------------------------------------------------------------------------------"
 echo "Checking for the following dependencies on your system:"
-echo "Node, Python, Ripgrep, Lazygit, Htop"
-echo "Though these are not strictly needed, it's recommended to have them for a seamless GarudaNvim experience."
+echo "Node, Python, Ripgrep, Lazygit, Htop, Hack Nerd Font"
+echo "Though these are not strictly required, having them provides a seamless GarudaNvim experience."
 echo
 
 dependencies=("node" "python3" "rg" "lazygit" "htop")
@@ -127,11 +127,14 @@ for dep in "${dependencies[@]}"; do
     fi
 done
 
+# Display information on installed and missing dependencies
 if [ ${#missing_dependencies[@]} -eq 0 ]; then
-    echo "INFO: All dependencies are already installed."
+    echo "INFO: All essential dependencies are already installed."
 else
     echo "INFO: Found installed dependencies: ${installed_dependencies[*]}"
     echo "INFO: Missing dependencies: ${missing_dependencies[*]}"
+    
+    # Prompt to install missing dependencies
     for dep in "${missing_dependencies[@]}"; do
         echo
         read -p "Would you like to install $dep? (y/n): " install_choice
@@ -185,11 +188,60 @@ else
         fi
     done
 fi
+
+# Check and install Hack Nerd Font
+echo
+echo "Checking for Hack Nerd Font..."
+FONT_NAME="Hack Nerd Font"
+if [ "$OS" = "macOS" ]; then
+    FONT_DIR="$HOME/Library/Fonts"
+else
+    FONT_DIR="$HOME/.local/share/fonts"
+fi
+FONT_PATH="$FONT_DIR/HackNerdFont-Regular.ttf"
+
+if [ -f "$FONT_PATH" ]; then
+    echo "INFO: $FONT_NAME is already installed."
+else
+    echo "$FONT_NAME is not installed on your system."
+    echo "It is recommended for GarudaNvim to display icons correctly and enhance readability."
+    echo
+    read -p "Would you like to install $FONT_NAME? (y/n): " install_font_choice
+
+    if [ "$install_font_choice" = "y" ]; then
+        echo
+        echo "INFO: Installing $FONT_NAME..."
+        
+        # Ensure the font directory exists
+        mkdir -p "$FONT_DIR"
+        
+        # Download Hack Nerd Font
+        curl -fLo "$FONT_DIR/Hack.zip" https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Hack.zip
+        
+        # Unzip and install the font
+        unzip -o "$FONT_DIR/Hack.zip" -d "$FONT_DIR"
+        rm "$FONT_DIR/Hack.zip"
+
+        # Refresh the font cache for Linux
+        if [ "$OS" != "macOS" ]; then
+            if command -v fc-cache >/dev/null 2>&1; then
+                fc-cache -f -v
+            fi
+        fi
+
+        echo
+        echo "INFO: $FONT_NAME has been successfully installed!"
+    else
+        echo
+        echo "INFO: You chose not to install $FONT_NAME."
+        echo "GarudaNvim may not display icons correctly without it."
+    fi
+fi
 echo
 echo
 
 
-# Step 2: Check for existing Neovim configuration
+# Step 4: Check for existing Neovim configuration
 echo "Step 4: Checking for existing Neovim configuration in ~/.config/nvim"
 echo "------------------------------------------------------------------------------------------------------------------"
 if [ -d ~/.config/nvim ]; then
@@ -236,7 +288,7 @@ fi
 echo
 echo
 
-# Step 3: Cloning GarudaNvim repository
+# Step 5: Cloning GarudaNvim repository
 echo "Step 5: Installing GarudaNvim to ~/.config/nvim"
 echo "------------------------------------------------------------------------------------------------------------------"
 # Clone the repository
